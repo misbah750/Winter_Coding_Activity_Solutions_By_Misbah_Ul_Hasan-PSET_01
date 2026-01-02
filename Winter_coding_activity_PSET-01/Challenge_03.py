@@ -1,46 +1,57 @@
-def median_of_two_arrays(scoresA, scoresB):
-    m, n = len(scoresA), len(scoresB)
-    total = m + n
+import heapq
+
+def kthSmallest(matrix, k):
+    n = len(matrix)
+    min_heap = []
     
+    # start by adding the first element from each row
+    for row in range(n):
+        heapq.heappush(min_heap, (matrix[row][0], row, 0))
     
-    steps_needed = total // 2 + 1
-    
-    i = j = 0
-    prev = curr = 0
-    
-    # Walk through both arrays together picking the smaller value each time
-    for step in range(steps_needed):
-        prev = curr
+    # take the smallest element k times
+    for _ in range(k):
+        value, row, col = heapq.heappop(min_heap)
         
-        
-        if i < m and (j >= n or scoresA[i] <= scoresB[j]):
-            curr = scoresA[i]
-            i += 1
-        else:
-            curr = scoresB[j]
-            j += 1
+        # Add the next element from the same row if there is one
+        if col + 1 < n:
+            heapq.heappush(min_heap, (matrix[row][col + 1], row, col + 1))
     
-    # Odd length
-    if total % 2 == 1:
-        return float(curr)
-    # Even length
-    else:
-        return (prev + curr) / 2.0
+    return value
 
 # Test case 1
-scoresA = [1, 3, 5]
-scoresB = [2, 4, 6]
-print(f"Test 1 - scoresA: {scoresA}, scoresB: {scoresB}")
-print(f"Median: {median_of_two_arrays(scoresA, scoresB)}")
+matrix = [
+    [1, 5, 9],
+    [10, 11, 13],
+    [12, 13, 15]
+]
+k = 8
+print(f"Test 1 - k={k}")
+print(f"Result: {kthSmallest(matrix, k)}")
 
 # Test case 2
-scoresA = [1, 2]
-scoresB = [3, 4]
-print(f"\nTest 2 - scoresA: {scoresA}, scoresB: {scoresB}")
-print(f"Median: {median_of_two_arrays(scoresA, scoresB)}")
+matrix = [
+    [1, 2],
+    [3, 4]
+]
+k = 3
+print(f"\nTest 2 - k={k}")
+print(f"Result: {kthSmallest(matrix, k)}")
 
 # Test case 3
-scoresA = [1, 3]
-scoresB = [2]
-print(f"\nTest 3 - scoresA: {scoresA}, scoresB: {scoresB}")
-print(f"Median: {median_of_two_arrays(scoresA, scoresB)}")
+matrix = [
+    [1, 4, 7],
+    [2, 5, 8],
+    [3, 6, 9]
+]
+k = 5
+print(f"\nTest 3 - k={k}")
+print(f"Result: {kthSmallest(matrix, k)}")
+
+# Test case 4
+matrix = [
+    [-5, -3],
+    [-2, 0]
+]
+k = 2
+print(f"\nTest 4 - k={k}")
+print(f"Result: {kthSmallest(matrix, k)}")
